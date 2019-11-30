@@ -27,7 +27,7 @@ An object of class \code{sup}.
 Create a sup object.
 }
 \examples{
-as.sup(10)       # 10 +- -
+as.sup(10)       # 10 +- 0
 as.sup(10, 1)    # 10 +- 1
 as.sup(c(10, 1)) # 10 +- 1
 as.sup(x=1:10)   # 5.5 +- 3.02765
