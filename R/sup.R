@@ -39,24 +39,36 @@ NULL
 
 #' Create a sup object.
 #'
-#' @param v either a vector of length 2, in which case it is returned
+#' @param v Either a vector of length 2, in which case it is returned
 #' unchanged, or a vector of length 1, in which case `u` (which defaults
-#' to zero) is taken to be the uncertainty.
+#' to zero) is taken to be the uncertainty. If missing, then `x`
+#' must be supplied.
 #'
-#' @param u a numerical value indicating the uncertainty in `v` (ignored
-#' unless length(u) is 1).
+#' @param u A numerical value indicating the uncertainty in `v` (ignored
+#' unless `length(u)` is 1, and ignored if `x` is supplied).
+#'
+#' @param x A numerical vector of values. If this is given,
+#' then the other arguments are ignored, and the return
+#' value consists of the mean and the standard deviation
+#' of x.
 #'
 #' @return An object of class `sup`.
 #'
 #' @examples
-#' as.sup(10)
-#' as.sup(10, 1)
-#' as.sup(c(10, 1))
+#' as.sup(10)       # 10 +- 0
+#' as.sup(10, 1)    # 10 +- 1
+#' as.sup(c(10, 1)) # 10 +- 1
+#' as.sup(x=1:10)   # 5.5 +- 3.02765
 #'
+#' @importFrom stats sd
 #' @export
-as.sup <- function(v, u=0)
+as.sup <- function(v, u=0, x)
 {
-    rval <- if (1 == length(v)) c(v, u) else if (2 == length(v)) v else stop("v must be of length 1 or 2")
+    if (!missing(x)) {
+        rval <- c(mean(x, na.rm=TRUE), sd(x, na.rm=TRUE))
+    } else {
+        rval <- if (1 == length(v)) c(v, u) else if (2 == length(v)) v else stop("v must be of length 1 or 2")
+    }
     class(rval) <- "sup"
     rval
 }

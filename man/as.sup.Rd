@@ -4,15 +4,21 @@
 \alias{as.sup}
 \title{Create a sup object.}
 \usage{
-as.sup(v, u = 0)
+as.sup(v, u = 0, x)
 }
 \arguments{
-\item{v}{either a vector of length 2, in which case it is returned
+\item{v}{Either a vector of length 2, in which case it is returned
 unchanged, or a vector of length 1, in which case \code{u} (which defaults
-to zero) is taken to be the uncertainty.}
+to zero) is taken to be the uncertainty. If missing, then \code{x}
+must be supplied.}
 
-\item{u}{a numerical value indicating the uncertainty in \code{v} (ignored
-unless length(u) is 1).}
+\item{u}{A numerical value indicating the uncertainty in \code{v} (ignored
+unless \code{length(u)} is 1, and ignored if \code{x} is supplied).}
+
+\item{x}{A numerical vector of values. If this is given,
+then the other arguments are ignored, and the return
+value consists of the mean and the standard deviation
+of x.}
 }
 \value{
 An object of class \code{sup}.
@@ -21,8 +27,9 @@ An object of class \code{sup}.
 Create a sup object.
 }
 \examples{
-as.sup(10)
-as.sup(10, 1)
-as.sup(c(10, 1))
+as.sup(10)       # 10 +- -
+as.sup(10, 1)    # 10 +- 1
+as.sup(c(10, 1)) # 10 +- 1
+as.sup(x=1:10)   # 5.5 +- 3.02765
 
 }
