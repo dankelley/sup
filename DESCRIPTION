@@ -1,0 +1,16 @@
+Package: sup
+Title: Propagate uncertainties in numerical computations
+Version: 0.0.1
+Authors@R:
+    person(given = "Dan",
+           family = "Kelley",
+           role = c("aut", "cre"),
+           email = "kelley.dan@gmal.com",
+           comment = c(ORCID = "https://orcid.org/0000-0001-7808-5911"))
+Description: This package creates `%+%` as a new binary operator that adds two items and also propagates the uncertainties of those items. Similar operations are performed with `%-%`, `%-%`, `%*%` and `%/%`.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.0
+
