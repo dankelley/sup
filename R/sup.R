@@ -1,8 +1,35 @@
 #' sup: A Package for Simple Error Propagation
 #'
 #' The sup package provides functions for handling simple
-#' error propagaation calculations. This is mainly handled
-#' with binary operators such as `%+$` for addition.
+#' arithmetic operations for scalar quantities that are subject
+#' to uncertainty. This is handled with binary operators:
+#' `%+%` for addition, `%-%` for subtraction, `%*%` for multiplication
+#' and `%/%` for division. These operators can work with vectors
+#' of length 1 (which are interpreted as scalars without uncertainties),
+#' with vectors of length 2 (in which case the second element is taken
+#' as the uncertainty) or with objects created with [as.sup()], e.g.
+#'```
+#' 1 %*% 3                       # 3 +- 0
+#' c(1, 0.1) %*% c(3, 0.3)       # 3 +- 0.4242641
+#' c(1, 0.1) %*% as.sup(3, 0.3)  # 3 +- 0.4242641
+#'```
+#'
+#' @section A note on left-to-right operator precedence:
+#'
+#' It is important to note that the sup operators work from
+#' left to right, which is unlike the normal state of affairs
+#' in R.  Thus, for example,
+#'```
+#' c(1, 0) %+% c(2, 0) %*% c(3, 0)
+#'```
+#' evaluates to `9 +- 0`, because the addition is done before
+#' the multiplication, whereas conventonal R precedence
+#' would suggest `7 +- 0`.  Parentheses are the solution
+#' to this problem, e.g. writing
+#'```
+#' c(1, 0) %+% (c(2, 0) %*% c(3, 0))
+#'```
+#' in this case.
 #'
 #' @docType package
 #'
@@ -22,12 +49,12 @@ NULL
 #' @return An object of class `sup`.
 #'
 #' @examples
-#' sup(10)
-#' sup(10, 1)
-#' sup(c(10, 1))
+#' as.sup(10)
+#' as.sup(10, 1)
+#' as.sup(c(10, 1))
 #'
 #' @export
-sup <- function(v, u=0)
+as.sup <- function(v, u=0)
 {
     rval <- if (1 == length(v)) c(v, u) else if (2 == length(v)) v else stop("v must be of length 1 or 2")
     class(rval) <- "sup"
@@ -44,8 +71,8 @@ sup <- function(v, u=0)
 #' @export
 `%+%` <- function(A, B)
 {
-    A <- sup(A)
-    B <- sup(B)
+    A <- as.sup(A)
+    B <- as.sup(B)
     value <- A[1] + B[1]
     uncertainty <- sqrt(A[2]^2 + B[2]^2)
     rval <- c(value, uncertainty)
@@ -63,8 +90,8 @@ sup <- function(v, u=0)
 #' @export
 `%-%` <- function(A, B)
 {
-    A <- sup(A)
-    B <- sup(B)
+    A <- as.sup(A)
+    B <- as.sup(B)
     value <- A[1] - B[1]
     uncertainty <- sqrt(A[2]^2 + B[2]^2)
     rval <- c(value, uncertainty)
@@ -81,8 +108,8 @@ sup <- function(v, u=0)
 #' @export
 `%*%` <- function(A, B)
 {
-    A <- sup(A)
-    B <- sup(B)
+    A <- as.sup(A)
+    B <- as.sup(B)
     value <- A[1] * B[1]
     uncertainty <- value * sqrt((A[2]/A[1])^2+(B[2]/B[1])^2)
     rval <- c(value, uncertainty)
@@ -99,8 +126,8 @@ sup <- function(v, u=0)
 #' @export
 `%/%` <- function(A, B)
 {
-    A <- sup(A)
-    B <- sup(B)
+    A <- as.sup(A)
+    B <- as.sup(B)
     value <- A[1] / B[1]
     uncertainty <- value * sqrt((A[2]/A[1])^2+(B[2]/B[1])^2)
     rval <- c(value, uncertainty)
@@ -114,8 +141,8 @@ sup <- function(v, u=0)
 #' @export
 #'
 #' @examples
-#' print(sup(10, 1))
-#' sup(10, 1)
+#' print(as.sup(10, 1))
+#' as.sup(10, 1)
 #' c(10, 1) %*% c(100, 5)
 print.sup <- function(x, ...)
 {

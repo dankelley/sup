@@ -4,28 +4,33 @@
 \name{sup}
 \alias{sup}
 \title{sup: A Package for Simple Error Propagation}
-\usage{
-sup(v, u = 0)
-}
-\arguments{
-\item{v}{either a vector of length 2, in which case it is returned
-unchanged, or a vector of length 1, in which case \code{u} (which defaults
-to zero) is taken to be the uncertainty.}
-
-\item{u}{a numerical value indicating the uncertainty in \code{v} (ignored
-unless length(u) is 1).}
-}
-\value{
-An object of class \code{sup}.
-}
 \description{
 The sup package provides functions for handling simple
-error propagaation calculations. This is mainly handled
-with binary operators such as \verb{\%+$} for addition.
+arithmetic operations for scalar quantities that are subject
+to uncertainty. This is handled with binary operators:
+\verb{\%+\%} for addition, \verb{\%-\%} for subtraction, \verb{\%*\%} for multiplication
+and \verb{\%/\%} for division. These operators can work with vectors
+of length 1 (which are interpreted as scalars without uncertainties),
+with vectors of length 2 (in which case the second element is taken
+as the uncertainty) or with objects created with \code{\link[=as.sup]{as.sup()}}, e.g.\preformatted{1 \%*\% 3                       # 3 +- 0
+c(1, 0.1) \%*\% c(3, 0.3)       # 3 +- 0.4242641
+c(1, 0.1) \%*\% as.sup(3, 0.3)  # 3 +- 0.4242641
 }
-\examples{
-sup(10)
-sup(10, 1)
-sup(c(10, 1))
+}
+\section{A note on left-to-right operator precedence}{
 
+
+It is important to note that the sup operators work from
+left to right, which is unlike the normal state of affairs
+in R.  Thus, for example,\preformatted{c(1, 0) \%+\% c(2, 0) \%*\% c(3, 0)
 }
+
+evaluates to \code{9 +- 0}, because the addition is done before
+the multiplication, whereas conventonal R precedence
+would suggest \code{7 +- 0}.  Parentheses are the solution
+to this problem, e.g. writing\preformatted{c(1, 0) \%+\% (c(2, 0) \%*\% c(3, 0))
+}
+
+in this case.
+}
+
