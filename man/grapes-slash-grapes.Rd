@@ -7,9 +7,12 @@
 A \%/\% B
 }
 \arguments{
-\item{A}{an uncertain value. This may be object of class \code{"u"}, created with \code{\link[=sup]{sup()}}, or a numeric vector of length 2 containing a value as the first
-entry and its uncertainty as the second entry, or a numeric vector of length 1,
-in which case the uncertainty is assumed to be zero.}
+\item{A}{An uncertain value, in one of three possible forms:
+(1) an object of class \code{"sup"}, created with \code{\link[=as.sup]{as.sup()}},
+(2) a numeric vector of length two containing a value as the first
+entry and its uncertainty as the second entry, or
+(3) a numeric vector of length 1, in which case the uncertainty
+is assumed to be zero.}
 
 \item{B}{analogous to A.}
 }

@@ -75,7 +75,7 @@ as.sup <- function(v, u=0, x)
 
 #' Add two uncertain items
 #'
-#' @template supTemplate
+#' @template binaryTemplate
 #'
 #' @examples
 #' c(10, 1) %+% c(2, 0.5)
@@ -94,7 +94,7 @@ as.sup <- function(v, u=0, x)
 
 #' Subtract two uncertain items
 #'
-#' @template supTemplate
+#' @template binaryTemplate
 #'
 #' @examples
 #' c(10, 1) %-% c(2, 0.5)
@@ -113,7 +113,7 @@ as.sup <- function(v, u=0, x)
 
 #' Multiply two uncertain items
 #'
-#' @template supTemplate
+#' @template binaryTemplate
 #'
 #' @examples
 #' c(10, 1) %*% c(2, 0.5)
@@ -131,7 +131,7 @@ as.sup <- function(v, u=0, x)
 
 #' Divide two uncertain items
 #'
-#' @template supTemplate
+#' @template binaryTemplate
 #'
 #' @examples
 #' c(10, 1) %/% c(2, 0.5)
@@ -159,5 +159,115 @@ as.sup <- function(v, u=0, x)
 print.sup <- function(x, ...)
 {
     cat(x[1], "+-", x[2], "\n")
+}
+
+#' Sine function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' sin(as.sup(pi/2, pi/8))
+sin.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- sin(x[1])
+    uncertainty <- x[2] * cos(x[1])
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Cosine function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' cos(as.sup(pi/2, pi/8))
+cos.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- cos(x[1])
+    uncertainty <- x[2] * sin(x[1])
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Tangent function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' tan(as.sup(pi/2, pi/8))
+tan.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- tan(x[1])
+    uncertainty <- x[2] / cos(x[1])^2
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Exponential function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' exp(as.sup(2, 0.2))
+exp.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- exp(x[1])
+    uncertainty <- x[2] * value
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Square-root function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' sqrt(as.sup(2, 0.2))
+sqrt.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- sqrt(x[1])
+    uncertainty <- x[2] / (2 * value)
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Logarithm function
+#'
+#' @template unaryTemplate
+#' @param base Numerical value giving the base of he logarithm,
+#' with the default yielding the natural logarithm.
+#'
+#' @export
+#'
+#' @examples
+#' log(as.sup(2, 0.2))
+log.sup <- function(x, base=exp(1))
+{
+    x <- as.sup(x)
+    value <- log(x[1])
+    uncertainty <- x[2] / (value * log(base))
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
 }
 

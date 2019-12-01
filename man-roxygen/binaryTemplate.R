@@ -9,9 +9,12 @@
 #' is highly encouraged to avoid confusion, e.g. write
 #' `1 %+% (2 %*% 3)` to mimic conventional algebra.
 #'
-#' @param A an uncertain value. This may be object of class `"u"`, created with [sup()], or a numeric vector of length 2 containing a value as the first
-#' entry and its uncertainty as the second entry, or a numeric vector of length 1,
-#' in which case the uncertainty is assumed to be zero.
+#' @param A An uncertain value, in one of three possible forms:
+#' (1) an object of class `"sup"`, created with [as.sup()],
+#' (2) a numeric vector of length two containing a value as the first
+#' entry and its uncertainty as the second entry, or
+#' (3) a numeric vector of length 1, in which case the uncertainty
+#' is assumed to be zero.
 #'
 #' @param B analogous to A.
 #'
