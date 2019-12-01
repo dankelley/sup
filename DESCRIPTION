@@ -1,5 +1,5 @@
 Package: sup
-Title: Propagate uncertainties in numerical computations
+Title: Propagate Uncertainties in Numerical Computations
 Version: 0.0.1
 Authors@R:
     person(given = "Dan",
