@@ -17,5 +17,5 @@ Print an uncertain value
 \examples{
 print(as.sup(10, 1))
 as.sup(10, 1)
-c(10, 1) \%*\% c(100, 5)
+as.sup(10, 1) * as.sup(100, 5)
 }

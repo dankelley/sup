@@ -2,16 +2,15 @@
 #'
 #' The sup package provides functions for handling simple
 #' arithmetic operations for scalar quantities that are subject
-#' to uncertainty. This is handled with binary operators:
-#' `%+%` for addition, `%-%` for subtraction, `%*%` for multiplication
-#' and `%/%` for division. These operators can work with vectors
-#' of length 1 (which are interpreted as scalars without uncertainties),
-#' with vectors of length 2 (in which case the second element is taken
-#' as the uncertainty) or with objects created with [as.sup()], e.g.
+#' to uncertainty. This is handled with the usual binary operators,
+#' e.g. `+` for addition, and with several unary functions, e.g.
+# `sin`, etc.
 #'```
-#' 1 %*% 3                       # 3 +- 0
-#' c(1, 0.1) %*% c(3, 0.3)       # 3 +- 0.4242641
-#' c(1, 0.1) %*% as.sup(3, 0.3)  # 3 +- 0.4242641
+#' a <- sup(0.1, 0.01)
+#' b <- sup(3, 0.1)
+#' a * b                         # 3 +- 0
+#' a % b                         # 3 +- 0.4242641
+#' sin(a)                        # 3 +- 0.4242641
 #'```
 #'
 #' @section A note on left-to-right operator precedence:
@@ -20,16 +19,38 @@
 #' left to right, which is unlike the normal state of affairs
 #' in R.  Thus, for example,
 #'```
-#' c(1, 0) %+% c(2, 0) %*% c(3, 0)
+#' as.sup(1, 0) + as.sup(2, 0) * as.sup(3, 0)
 #'```
 #' evaluates to `9 +- 0`, because the addition is done before
 #' the multiplication, whereas conventonal R precedence
 #' would suggest `7 +- 0`.  Parentheses are the solution
 #' to this problem, e.g. writing
 #'```
-#' c(1, 0) %+% (c(2, 0) %*% c(3, 0))
+#' as.sup(1, 0) + (as.sup(2, 0) * as.sup(3, 0))
 #'```
 #' in this case.
+#'
+#' **References**
+#'
+#' * Ku, Harry.
+#' “Notes on the Use of Propagation of Error Formulas.”
+#' Journal of Research of the National Bureau of Standards-C. Engineering and Instrumentation 70C, no. 4 (December 1966): 263–73.
+#' \url{https://nvlpubs.nist.gov/nistpubs/jres/70C/jresv70Cn4p263_A1b.pdf}
+#'
+#' * Taylor, Barry N., and Chris E. Kuyatt.
+#' “Guidelines for Evaluating and Expressing the Uncertainty of NIST Measurement Results.”
+#' NIST Technical Note. Gaithersburg, MD, USA:
+#' U.S. Department of Commerce Technology Administration: National Institute of Standards and Technology, 1994.
+#' \url{https://www.nist.gov/pml/nist-technical-note-1297}
+#'
+#' * Ucar, Iñaki, Edzer Pebesma, and Arturo Azcorra.
+#' “Measurement Errors in R.” The R Journal 10, no. 2 (2018): 549–57.
+#' \url{https://doi.org/10.32614/RJ-2018-075}
+#'
+#' * Wikipedia.
+#' “Propagation of Uncertainty.”
+#' In Wikipedia, November 26, 2019.
+#' \url{https://en.wikipedia.org/w/index.php?title=Propagation_of_ uncertainty&oldid=928003036}
 #'
 #' @docType package
 #'
@@ -78,10 +99,10 @@ as.sup <- function(v, u=0, x)
 #' @template binaryTemplate
 #'
 #' @examples
-#' c(10, 1) %+% c(2, 0.5)
+#' as.sup(10, 1) + as.sup(2, 0.5)
 #'
 #' @export
-`%+%` <- function(A, B)
+`+.sup` <- function(A, B)
 {
     A <- as.sup(A)
     B <- as.sup(B)
@@ -97,10 +118,10 @@ as.sup <- function(v, u=0, x)
 #' @template binaryTemplate
 #'
 #' @examples
-#' c(10, 1) %-% c(2, 0.5)
+#' as.sup(10, 1) - as.sup(2, 0.5)
 #'
 #' @export
-`%-%` <- function(A, B)
+`-.sup` <- function(A, B)
 {
     A <- as.sup(A)
     B <- as.sup(B)
@@ -116,9 +137,9 @@ as.sup <- function(v, u=0, x)
 #' @template binaryTemplate
 #'
 #' @examples
-#' c(10, 1) %*% c(2, 0.5)
+#' as.sup(10, 1) * as.sup(2, 0.5)
 #' @export
-`%*%` <- function(A, B)
+`*.sup` <- function(A, B)
 {
     A <- as.sup(A)
     B <- as.sup(B)
@@ -134,9 +155,9 @@ as.sup <- function(v, u=0, x)
 #' @template binaryTemplate
 #'
 #' @examples
-#' c(10, 1) %/% c(2, 0.5)
+#' as.sup(10, 1) / as.sup(2, 0.5)
 #' @export
-`%/%` <- function(A, B)
+`/sup` <- function(A, B)
 {
     A <- as.sup(A)
     B <- as.sup(B)
@@ -155,7 +176,7 @@ as.sup <- function(v, u=0, x)
 #' @examples
 #' print(as.sup(10, 1))
 #' as.sup(10, 1)
-#' c(10, 1) %*% c(100, 5)
+#' as.sup(10, 1) * as.sup(100, 5)
 print.sup <- function(x, ...)
 {
     cat(x[1], "+-", x[2], "\n")
