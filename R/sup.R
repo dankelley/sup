@@ -271,3 +271,57 @@ log.sup <- function(x, base=exp(1))
     rval
 }
 
+#' Hyperbolic cosine function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' cosh(as.sup(2, 0.2))
+cosh.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- cosh(x[1])
+    uncertainty <- x[2] * sinh(value)
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Hyperbolic sine function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' sinh(as.sup(2, 0.2))
+sinh.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- sinh(x[1])
+    uncertainty <- x[2] * cosh(value)
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
+#' Hyperbolic tangent function
+#'
+#' @template unaryTemplate
+#'
+#' @export
+#'
+#' @examples
+#' tanh(as.sup(2, 0.2))
+tanh.sup <- function(x)
+{
+    x <- as.sup(x)
+    value <- tanh(x[1])
+    uncertainty <- x[2] * (1 - tanh(value)^2)
+    rval <- c(value, uncertainty)
+    class(rval) <- "sup"
+    rval
+}
+
